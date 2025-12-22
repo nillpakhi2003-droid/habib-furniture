@@ -1,0 +1,48 @@
+{
+  "name": "habib-furniture",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "backup": "tsx scripts/backup.ts",
+    "backup:test": "bash scripts/test-telegram.sh",
+    "setup:prod": "bash scripts/setup-production.sh",
+    "setup:ubuntu": "bash scripts/ubuntu-setup.sh",
+    "setup:nginx": "bash scripts/setup-nginx.sh",
+    "setup:cron": "bash scripts/setup-cron.sh",
+    "health-check": "bash scripts/health-check.sh"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/bcryptjs": "^2.4.6",
+    "typescript": "^5.6.0",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "tsx": "^4.7.0"
+  },
+  "optionalDependencies": {
+    "@sentry/nextjs": "^8.0.0",
+    "redis": "^4.6.0",
+    "resend": "^3.0.0",
+    "nodemailer": "^6.9.0",
+    "@types/nodemailer": "^6.4.0"
+  }
+}

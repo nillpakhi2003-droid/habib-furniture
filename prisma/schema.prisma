@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  BKASH
+  NAGAD
+  BANK_TRANSFER
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  passwordHash String
+  role      Role     @default(STAFF)
+  createdAt DateTime @default(now())
+
+  @@unique([phone])
+  @@index([role])
+  @@index([phone])
+}
+
+model Product {
+  id            String   @id @default(uuid())
+  name          String
+  slug          String
+  description   String?  @db.Text
+  category      String?
+  price         Decimal  @db.Decimal(10, 2)
+  discountPrice Decimal? @db.Decimal(10, 2)
+  stock         Int      @default(0)
+  isActive      Boolean  @default(true)
+  dimensions    Json?
+  createdAt     DateTime @default(now())
+
+  variants   Variant[]
+  images     Image[]
+  orderItems OrderItem[]
+
+  @@unique([slug])
+  @@index([isActive])
+  @@index([category])
+  @@index([createdAt])
+  @@index([slug])
+}
+
+model Variant {
+  id        String @id @default(uuid())
+  productId String
+  color     String
+  material  String
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, color, material])
+  @@index([productId])
+}
+
+model Image {
+  id        String  @id @default(uuid())
+  productId String
+  path      String
+  isPrimary Boolean @default(false)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, path])
+  @@index([productId])
+  @@index([productId, isPrimary])
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  customerName    String
+  phone           String
+  address         String
+  deliveryCharge  Decimal       @default(0) @db.Decimal(10, 2)
+  totalAmount     Decimal       @db.Decimal(10, 2)
+  status          OrderStatus   @default(PENDING)
+  paymentMethod   PaymentMethod @default(CASH_ON_DELIVERY)
+  paymentStatus   PaymentStatus @default(PENDING)
+  transactionId   String?
+  paymentPhone    String?
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+
+  items OrderItem[]
+
+  @@index([status])
+  @@index([phone])
+  @@index([paymentStatus])
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  orderId       String
+  productId     String
+  quantity      Int
+  priceSnapshot Decimal @db.Decimal(10, 2)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@id([orderId, productId])
+  @@index([productId])
+}
+
+model PageView {
+  id        String   @id @default(uuid())
+  path      String
+  userAgent String?
+  referer   String?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([path])
+}
+
+model Settings {
+  id                    String  @id @default(uuid())
+  deliveryChargeDhaka   Decimal @default(60) @db.Decimal(10, 2)
+  deliveryChargeOutside Decimal @default(120) @db.Decimal(10, 2)
+  bkashNumber           String  @default("01XXXXXXXXX")
+  nagadNumber           String  @default("01XXXXXXXXX")
+  facebookPixelId       String?
+
+  @@map("settings")
+}
