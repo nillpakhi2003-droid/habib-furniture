@@ -74,7 +74,8 @@ export class EmailService {
     // This requires nodemailer to be installed
     // Import dynamically to make it optional
     try {
-      const nodemailer = await import('nodemailer');
+      // @ts-ignore - optional dependency
+      const nodemailer = await import('nodemailer') as any;
       
       const transporter = nodemailer.default.createTransport(this.config.smtp);
 

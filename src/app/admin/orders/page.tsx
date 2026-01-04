@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "../../../lib/prisma";
+import { updateOrderStatusAction, createDemoOrderAction } from "./actions";
 
 function formatTaka(value: number | string) {
   const num = Number(value);
@@ -9,58 +10,6 @@ function formatTaka(value: number | string) {
 
 const STATUSES = ["PENDING", "CONFIRMED", "DELIVERED", "CANCELLED"] as const;
 type OrderStatus = (typeof STATUSES)[number];
-
-export async function updateOrderStatusAction(formData: FormData) {
-  "use server";
-
-  const orderId = String(formData.get("orderId") ?? "").trim();
-  const status = String(formData.get("status") ?? "").trim().toUpperCase() as OrderStatus;
-
-  if (!orderId || !STATUSES.includes(status)) {
-    return;
-  }
-
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { status },
-  });
-
-  revalidatePath("/admin/orders");
-}
-
-export async function createDemoOrderAction() {
-  "use server";
-
-  const product = await prisma.product.findFirst({
-    where: { isActive: true },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, price: true, discountPrice: true },
-  });
-
-  if (!product) {
-    return;
-  }
-
-  const amount = product.discountPrice ?? product.price;
-
-  await prisma.order.create({
-    data: {
-      customerName: "Demo Customer",
-      phone: "0123456789",
-      address: "123 Demo Street, Dhaka",
-      totalAmount: amount,
-      items: {
-        create: {
-          productId: product.id,
-          quantity: 1,
-          priceSnapshot: amount,
-        },
-      },
-    },
-  });
-
-  revalidatePath("/admin/orders");
-}
 
 async function getOrders(statusFilter?: string) {
   const where = statusFilter && STATUSES.includes(statusFilter as OrderStatus)
@@ -139,9 +88,10 @@ function PaymentBadge({ method, status }: { method: string; status: string }) {
 export default async function OrdersPage({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: Promise<{ status?: string }>;
 }) {
-  const statusFilter = searchParams?.status;
+  const params = await searchParams;
+  const statusFilter = params?.status;
   const orders = await getOrders(statusFilter);
 
   return (

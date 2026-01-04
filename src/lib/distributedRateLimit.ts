@@ -139,7 +139,8 @@ export async function getRedisClient() {
   if (!redisUrl) return null;
 
   try {
-    const redis = await import('redis');
+    // @ts-ignore - optional dependency
+    const redis = await import('redis') as any;
     redisClient = redis.createClient({ url: redisUrl });
     await redisClient.connect();
     console.log('✅ Redis connected for rate limiting');

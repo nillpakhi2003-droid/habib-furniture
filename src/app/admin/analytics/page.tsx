@@ -108,9 +108,10 @@ async function getVisitorStats(range: TimeRange = "all") {
 export default async function AnalyticsPage({
   searchParams,
 }: {
-  searchParams: { range?: string };
+  searchParams: Promise<{ range?: string }>;
 }) {
-  const range = (searchParams?.range || "all") as TimeRange;
+  const params = await searchParams;
+  const range = (params?.range || "all") as TimeRange;
   const stats = await getVisitorStats(range);
 
   return (

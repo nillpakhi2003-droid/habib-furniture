@@ -22,7 +22,8 @@ export class SentryMonitoring {
 
     try {
       // Import Sentry dynamically to make it optional
-      const Sentry = await import('@sentry/nextjs');
+      // @ts-ignore - optional dependency
+      const Sentry = await import('@sentry/nextjs') as any;
 
       const integrations = [] as any[];
       // browserTracingIntegration is only available in the browser bundle
@@ -39,7 +40,7 @@ export class SentryMonitoring {
         integrations,
 
         // Error filtering
-        beforeSend(event, hint) {
+        beforeSend(event: any, hint: any) {
           // Don't send certain errors to Sentry
           const error = hint?.originalException;
           
@@ -74,7 +75,8 @@ export class SentryMonitoring {
     if (!this.initialized) return;
 
     try {
-      const Sentry = await import('@sentry/nextjs');
+      // @ts-ignore - optional dependency
+      const Sentry = await import('@sentry/nextjs') as any;
       
       if (context) {
         Sentry.setContext('custom', context);
@@ -93,7 +95,8 @@ export class SentryMonitoring {
     if (!this.initialized) return;
 
     try {
-      const Sentry = await import('@sentry/nextjs');
+      // @ts-ignore - optional dependency
+      const Sentry = await import('@sentry/nextjs') as any;
       Sentry.captureMessage(message, level);
     } catch (err) {
       console.error('Failed to capture message:', err);
@@ -107,7 +110,8 @@ export class SentryMonitoring {
     if (!this.initialized) return;
 
     try {
-      const Sentry = await import('@sentry/nextjs');
+      // @ts-ignore - optional dependency
+      const Sentry = await import('@sentry/nextjs') as any;
       Sentry.setUser(user);
     } catch (err) {
       console.error('Failed to set user:', err);
