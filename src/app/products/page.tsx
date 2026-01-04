@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
-import { MobileSidebar } from "./MobileSidebar";
-import { ProductCard } from "@/components/ProductCard";
+import { prisma } from "../../lib/prisma";
+import MobileSidebar from "./MobileSidebar";
+import { ProductCard } from "../../components/ProductCard";
 
 function formatTaka(value: number | string) {
   const num = Number(value);

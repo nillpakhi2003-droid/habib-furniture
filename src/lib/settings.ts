@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "./prisma";
 
 export async function getDeliverySettings() {
   const settings = await prisma.settings.findFirst();

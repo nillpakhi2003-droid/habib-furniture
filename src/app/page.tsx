@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../lib/prisma";
 
 function formatTaka(value: number | string) {
   const num = Number(value);

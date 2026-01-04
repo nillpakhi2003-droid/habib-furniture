@@ -1,14 +1,14 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { checkRateLimit } from "@/lib/rateLimit";
+import { prisma } from "../../lib/prisma";
+import { checkRateLimit } from "../../lib/rateLimit";
 import { 
   sanitizeString, 
   validatePhone, 
   sanitizeQuantity, 
   validateAddress 
-} from "@/lib/validation";
-import { logger } from "@/lib/logger";
+} from "../../lib/validation";
+import { logger } from "../../lib/logger";
 import { headers } from "next/headers";
 
 type PaymentMethod = "CASH_ON_DELIVERY" | "BKASH" | "NAGAD";

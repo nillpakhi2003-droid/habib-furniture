@@ -1,6 +1,6 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
+import { useCart } from "../context/CartContext";
 
 type WishlistButtonProps = {
   productId: string;

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import * as fbq from "@/lib/facebook-pixel";
+import * as fbq from "../lib/facebook-pixel";
 
 export function FacebookPixel({ pixelId }: { pixelId: string | null }) {
   const pathname = usePathname();

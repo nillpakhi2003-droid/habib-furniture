@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { getDeliverySettings } from "@/lib/settings";
+import { prisma } from "../../../lib/prisma";
+import { getDeliverySettings } from "../../../lib/settings";
 import { OrderForm } from "./OrderForm";
-import { ProductViewTracker } from "@/components/ProductViewTracker";
-import { WishlistButton } from "@/components/WishlistButton";
+import { ProductViewTracker } from "../../../components/ProductViewTracker";
+import { WishlistButton } from "../../../components/WishlistButton";
 
 function formatTaka(value: number | string) {
   const num = Number(value);

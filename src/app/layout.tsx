@@ -4,8 +4,8 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import "./globals.css";
 import { AnalyticsTracker } from "./analytics/track";
-import { CartProvider } from "@/context/CartContext";
-import Header from "@/components/Header";
+import { CartProvider } from "../context/CartContext";
+import Header from "../components/Header";
 
 function Footer() {
   return (
