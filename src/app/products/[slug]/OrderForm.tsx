@@ -52,7 +52,7 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
 
     // Validate payment phone for bKash/Nagad
     if ((paymentMethod === "BKASH" || paymentMethod === "NAGAD") && !paymentPhone) {
-      setError(`Please enter your ${paymentMethod === "BKASH" ? "bKash" : "Nagad"} number`);
+      setError(`আপনার ${paymentMethod === "BKASH" ? "বিকাশ" : "নগদ"} নম্বর দিন`);
       return;
     }
 
@@ -99,18 +99,18 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
             });
           }
           setMessage(
-            `Order placed! Your order ID is ${res.orderId}. We will call you to confirm.`,
+            `অর্ডার সফল! আপনার অর্ডার আইডি ${res.orderId}। আমরা কনফার্ম করতে কল করব।`,
           );
           (e.target as HTMLFormElement).reset();
           setQuantity(1);
           setPaymentMethod("CASH_ON_DELIVERY");
           setDeliveryArea("INSIDE_DHAKA");
         } else {
-          setError(res.error || "Could not place order. Please try again.");
+          setError(res.error || "অর্ডার দিতে পারিনি। আবার চেষ্টা করুন।");
         }
       } catch (err) {
         console.error("Order error:", err);
-        setError("Failed to place order. Please try again.");
+        setError("অর্ডার বিফল। আবার চেষ্টা করুন।");
       }
     });
   };
@@ -118,8 +118,8 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
   return (
     <div className="space-y-3 bg-white border rounded-lg p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3 text-sm text-gray-700">
-        <p>Get doorstep delivery—COD, bKash or Nagad payment.</p>
-        <span className="px-2 py-1 bg-green-100 text-green-700 rounded">All over Bangladesh</span>
+        <p>ঘরে বসে পান—COD, বিকাশ বা নগদ পেমেন্ট।</p>
+        <span className="px-2 py-1 bg-green-100 text-green-700 rounded">সম্পূর্ণ বাংলাদেশে</span>
       </div>
       <form
         className="space-y-3"
@@ -127,17 +127,17 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-gray-700">Your name</span>
+            <span className="font-medium text-gray-700">আপনার নাম</span>
             <input
               name="customerName"
               required
               className="w-full border rounded-md px-3 py-2"
-              placeholder="e.g. Rahim"
+              placeholder="যেমন: রহিম"
               disabled={pending || stock === 0}
             />
           </label>
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-gray-700">Phone</span>
+            <span className="font-medium text-gray-700">ফোন নম্বর</span>
             <input
               name="phone"
               required
@@ -149,58 +149,58 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
         </div>
 
         <label className="space-y-1 text-sm block">
-          <span className="font-medium text-gray-700">Delivery address</span>
+          <span className="font-medium text-gray-700">ডেলিভারি ঠিকানা</span>
           <textarea
             name="address"
             required
             rows={2}
             className="w-full border rounded-md px-3 py-2"
-            placeholder="House, Road, Area, City"
+            placeholder="বাসা, রোড, এলাকা, শহর"
             disabled={pending || stock === 0}
           />
         </label>
 
         <label className="space-y-1 text-sm block">
-          <span className="font-medium text-gray-700">Delivery Area</span>
+          <span className="font-medium text-gray-700">ডেলিভারি এলাকা</span>
           <select
             value={deliveryArea}
             onChange={(e) => setDeliveryArea(e.target.value as "INSIDE_DHAKA" | "OUTSIDE_DHAKA")}
             className="w-full border rounded-md px-3 py-2"
             disabled={pending || stock === 0}
           >
-            <option value="INSIDE_DHAKA">Inside Dhaka (৳{settings.deliveryChargeDhaka})</option>
-            <option value="OUTSIDE_DHAKA">Outside Dhaka (৳{settings.deliveryChargeOutside})</option>
+            <option value="INSIDE_DHAKA">ঢাকার ভিতরে (৳{settings.deliveryChargeDhaka})</option>
+            <option value="OUTSIDE_DHAKA">ঢাকার বাইরে (৳{settings.deliveryChargeOutside})</option>
           </select>
         </label>
 
         <label className="space-y-1 text-sm block">
-          <span className="font-medium text-gray-700">Payment Method</span>
+          <span className="font-medium text-gray-700">পেমেন্ট পদ্ধতি</span>
           <select
             value={paymentMethod}
             onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
             className="w-full border rounded-md px-3 py-2"
             disabled={pending || stock === 0}
           >
-            <option value="CASH_ON_DELIVERY">Cash on Delivery (COD)</option>
-            <option value="BKASH">bKash (Pre-payment)</option>
-            <option value="NAGAD">Nagad (Pre-payment)</option>
+            <option value="CASH_ON_DELIVERY">ক্যাশ অন ডেলিভারি (COD)</option>
+            <option value="BKASH">বিকাশ (আগাম পেমেন্ট)</option>
+            <option value="NAGAD">নগদ (আগাম পেমেন্ট)</option>
           </select>
         </label>
 
         {(paymentMethod === "BKASH" || paymentMethod === "NAGAD") && (
           <div className="space-y-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-sm text-blue-900 font-medium">
-              {paymentMethod === "BKASH" ? "bKash" : "Nagad"} Payment Instructions:
+              {paymentMethod === "BKASH" ? "বিকাশ" : "নগদ"} পেমেন্ট নির্দেশাবলী:
             </p>
             <ol className="text-xs text-blue-800 space-y-1 list-decimal list-inside">
-              <li>Send Money to: <strong>{paymentMethod === "BKASH" ? settings.bkashNumber : settings.nagadNumber}</strong></li>
-              <li>Amount: <strong>{totalDisplay}</strong></li>
-              <li>Enter your transaction ID and payment number below</li>
+              <li>টাকা পাঠান: <strong>{paymentMethod === "BKASH" ? settings.bkashNumber : settings.nagadNumber}</strong></li>
+              <li>অ্যামাউন্ট: <strong>{totalDisplay}</strong></li>
+              <li>নিচে আপনার ট্রানজ্যাকশন আইডি এবং পেমেন্ট নম্বর দিন</li>
             </ol>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <label className="space-y-1 text-sm">
                 <span className="font-medium text-gray-700">
-                  Your {paymentMethod === "BKASH" ? "bKash" : "Nagad"} Number *
+                  আপনার {paymentMethod === "BKASH" ? "বিকাশ" : "নগদ"} নম্বর *
                 </span>
                 <input
                   name="paymentPhone"
@@ -211,7 +211,7 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
                 />
               </label>
               <label className="space-y-1 text-sm">
-                <span className="font-medium text-gray-700">Transaction ID (optional)</span>
+                <span className="font-medium text-gray-700">ট্রানজ্যাকশন আইডি (আপশনাল)</span>
                 <input
                   name="transactionId"
                   className="w-full border rounded-md px-3 py-2"
@@ -225,7 +225,7 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
 
         <div className="grid grid-cols-2 gap-3">
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-gray-700">Quantity</span>
+            <span className="font-medium text-gray-700">পরিমাণ</span>
             <input
               type="number"
               name="quantity"
@@ -239,19 +239,19 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
           </label>
           <div className="space-y-1 text-sm border rounded-md px-3 py-2 bg-gray-50">
             <div className="flex items-center justify-between">
-              <span className="text-gray-700">Unit Price</span>
+              <span className="text-gray-700">একক দাম</span>
               <span className="font-semibold text-gray-900">{priceDisplay}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-700">Subtotal ({quantity}x)</span>
+              <span className="text-gray-700">সাবটোটাল ({quantity}x)</span>
               <span className="font-semibold text-gray-900">{subtotalDisplay}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-700">Delivery</span>
+              <span className="text-gray-700">ডেলিভারি</span>
               <span className="font-semibold text-gray-900">{formatTaka(deliveryCharge)}</span>
             </div>
             <div className="flex items-center justify-between pt-2 border-t">
-              <span className="text-gray-900 font-bold">Total</span>
+              <span className="text-gray-900 font-bold">মোট</span>
               <span className="font-bold text-red-600 text-lg">{totalDisplay}</span>
             </div>
           </div>
@@ -262,7 +262,7 @@ export function OrderForm({ productId, stock, unitPrice, priceDisplay, settings 
           disabled={pending || stock === 0}
           className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 disabled:opacity-60"
         >
-          {stock === 0 ? "Out of Stock" : pending ? "Placing order..." : "Place Order"}
+          {stock === 0 ? "স্টক নেই" : pending ? "অর্ডার প্রক্রিয়াধীন..." : "অর্ডার করুন"}
         </button>
 
         {message && <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">{message}</p>}

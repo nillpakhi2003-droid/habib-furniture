@@ -24,24 +24,24 @@ export default function Header() {
               </svg>
             </button>
             <Link href="/" className="flex items-center">
-              <div className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-2xl shadow-md">
-                Habib Furniture
+              <div className="bg-red-600 text-white px-3 py-2 md:px-6 md:py-3 rounded-lg font-bold text-lg md:text-2xl shadow-md">
+                হাবিব ফার্নিচার
               </div>
             </Link>
           </div>
 
           <nav className="hidden lg:flex items-center gap-8">
             <Link href="/products" className="text-gray-700 hover:text-red-600 font-medium transition">
-              All Products
+              সকল পণ্য
             </Link>
             <Link href="/products?category=bedroom" className="text-gray-700 hover:text-red-600 font-medium transition">
-              Bedroom
+              বেডরুম
             </Link>
             <Link href="/products?category=kitchen" className="text-gray-700 hover:text-red-600 font-medium transition">
-              Kitchen Cabinet
+              রান্নাঘরের ক্যাবিনেট
             </Link>
             <Link href="/products?category=mattress" className="text-gray-700 hover:text-red-600 font-medium transition">
-              Mattress
+              ম্যাট্রেস
             </Link>
           </nav>
 
@@ -52,7 +52,7 @@ export default function Header() {
               </svg>
               <input
                 type="search"
-                placeholder="What are you looking for?"
+                placeholder="আপনি কি খুঁজছেন?"
                 className="outline-none text-sm w-full bg-transparent"
               />
             </div>

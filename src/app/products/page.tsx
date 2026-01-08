@@ -10,20 +10,20 @@ function formatTaka(value: number | string) {
 }
 
 const CATEGORIES = [
-  { name: "All Products", slug: "all", icon: "🏠" },
-  { name: "Bedroom", slug: "bedroom", icon: "🛏️" },
-  { name: "Living Room", slug: "living", icon: "🛋️" },
-  { name: "Dining", slug: "dining", icon: "🍽️" },
-  { name: "Office", slug: "office", icon: "💼" },
-  { name: "Kitchen Cabinet", slug: "kitchen", icon: "🗄️" },
-  { name: "Mattress", slug: "mattress", icon: "🛌" },
+  { name: "সকল পণ্য", slug: "all", icon: "🏠" },
+  { name: "বেডরুম", slug: "bedroom", icon: "🛏️" },
+  { name: "লিভিং রুম", slug: "living", icon: "🛋️" },
+  { name: "ডাইনিং", slug: "dining", icon: "🍽️" },
+  { name: "অফিস", slug: "office", icon: "💼" },
+  { name: "রান্নাঘরের ক্যাবিনেট", slug: "kitchen", icon: "🗄️" },
+  { name: "ম্যাট্রেস", slug: "mattress", icon: "🛌" },
 ];
 
 const PRICE_RANGES = [
-  { label: "Under ৳10,000", min: 0, max: 10000, value: "0-10000" },
-  { label: "৳10,000 - ৳25,000", min: 10000, max: 25000, value: "10000-25000" },
-  { label: "৳25,000 - ৳50,000", min: 25000, max: 50000, value: "25000-50000" },
-  { label: "Above ৳50,000", min: 50000, max: 999999999, value: "50000-999999999" },
+  { label: "৳১০,০০০ এর নিচে", min: 0, max: 10000, value: "0-10000" },
+  { label: "৳১০,০০০ - ৳২৫,০০০", min: 10000, max: 25000, value: "10000-25000" },
+  { label: "৳২৫,০০০ - ৳৫০,০০০", min: 25000, max: 50000, value: "25000-50000" },
+  { label: "৳৫০,০০০ এর উপরে", min: 50000, max: 999999999, value: "50000-999999999" },
 ];
 
 async function getActiveProducts(category?: string, priceRange?: string) {
@@ -81,9 +81,9 @@ export default async function ProductsPage({
       <div className="bg-gray-50 border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-gray-600 hover:text-red-600 transition">Home</Link>
+            <Link href="/" className="text-gray-600 hover:text-red-600 transition">হোম</Link>
             <span className="text-gray-400">›</span>
-            <span className="text-gray-900 font-medium">Products</span>
+            <span className="text-gray-900 font-medium">পণ্য</span>
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@ export default async function ProductsPage({
           {/* Sidebar - Categories */}
           <aside className="lg:w-64 flex-shrink-0">
             <div className="bg-white rounded-xl shadow-sm border p-6 sticky top-24">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Categories</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">ক্যাটাগরি</h2>
               <nav className="space-y-1">
                 {CATEGORIES.map((cat) => {
                   const isActive = category === cat.slug;
@@ -121,7 +121,7 @@ export default async function ProductsPage({
 
               {/* Filter by Price */}
               <div className="mt-8 pt-6 border-t">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Price Range</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">দামের সীমা</h3>
                 <div className="space-y-2 text-sm">
                   {PRICE_RANGES.map((range) => {
                     const isActive = priceRange === range.value;
@@ -156,7 +156,7 @@ export default async function ProductsPage({
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
-                      Clear Filter
+                      ফিল্টার মুছুন
                     </Link>
                   )}
                 </div>
@@ -169,15 +169,15 @@ export default async function ProductsPage({
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  {CATEGORIES.find((c) => c.slug === category)?.name || "Products"}
+                  {CATEGORIES.find((c) => c.slug === category)?.name || "পণ্য"}
                 </h1>
-                <p className="text-gray-600 mt-1">{products.length} products found</p>
+                <p className="text-gray-600 mt-1">{products.length} টি পণ্য পাওয়া গেছে</p>
               </div>
               <select className="border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                <option>Sort by: Latest</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Name: A to Z</option>
+                <option>সাজান: সর্বশেষ</option>
+                <option>দাম: কম থেকে বেশি</option>
+                <option>দাম: বেশি থেকে কম</option>
+                <option>নাম: অ থেকে ই</option>
               </select>
             </div>
 
@@ -186,8 +186,8 @@ export default async function ProductsPage({
                 <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                 </svg>
-                <p className="text-gray-500 text-lg font-medium">No products available</p>
-                <p className="text-gray-400 text-sm mt-1">Check back later for new items</p>
+                <p className="text-gray-500 text-lg font-medium">কোনো পণ্য নেই</p>
+                <p className="text-gray-400 text-sm mt-1">নতুন পণ্যের জন্য পরে দেখুন</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -30,12 +30,12 @@ export default async function HomePage() {
   const featuredProducts = await getFeaturedProducts();
 
   const categories = [
-    { name: "Bedroom Furniture", icon: "🛏️", href: "/products?category=bedroom" },
-    { name: "Living Room", icon: "🛋️", href: "/products?category=living" },
-    { name: "Dining Sets", icon: "🍽️", href: "/products?category=dining" },
-    { name: "Office Furniture", icon: "💼", href: "/products?category=office" },
-    { name: "Kitchen Cabinet", icon: "🗄️", href: "/products?category=kitchen" },
-    { name: "Mattress", icon: "🛌", href: "/products?category=mattress" },
+    { name: "বেডরুম ফার্নিচার", icon: "🛏️", href: "/products?category=bedroom" },
+    { name: "লিভিং রুম", icon: "🛋️", href: "/products?category=living" },
+    { name: "ডাইনিং সেট", icon: "🍽️", href: "/products?category=dining" },
+    { name: "অফিস ফার্নিচার", icon: "💼", href: "/products?category=office" },
+    { name: "রান্নাঘরের ক্যাবিনেট", icon: "🗄️", href: "/products?category=kitchen" },
+    { name: "ম্যাট্রেস", icon: "🛌", href: "/products?category=mattress" },
   ];
 
   return (
@@ -57,13 +57,13 @@ export default async function HomePage() {
                   href="/products"
                   className="inline-block bg-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700 transition shadow-lg"
                 >
-                  Browse Products
+                  পণ্য দেখুন
                 </Link>
                 <Link
-                  href="tel:+8801700000000"
+                  href="tel:+8801740649667"
                   className="inline-block border-2 border-red-600 text-red-600 px-8 py-4 rounded-lg font-semibold hover:bg-red-50 transition"
                 >
-                  Call Us
+                  কল করুন
                 </Link>
               </div>
             </div>
@@ -84,8 +84,8 @@ export default async function HomePage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Shop by Category</h2>
-            <p className="text-gray-600">Find the perfect furniture for every room</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">ক্যাটাগরি অনুযায়ী কিনুন</h2>
+            <p className="text-gray-600">প্রতিটি ঘরের জন্য যথাযথ ফার্নিচার খুঁজে নিন</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -110,11 +110,11 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
-              <p className="text-gray-600 mt-1">Our latest and most popular items</p>
+              <h2 className="text-3xl font-bold text-gray-900">ফিচার্ড পণ্য</h2>
+              <p className="text-gray-600 mt-1">আমাদের সর্বশেষ এবং জনপ্রিয় পণ্য</p>
             </div>
             <Link href="/products" className="text-red-600 hover:text-red-700 font-semibold">
-              View All →
+              সব দেখুন →
             </Link>
           </div>
 
@@ -176,7 +176,7 @@ export default async function HomePage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Why Choose Habib Furniture</h2>
+            <h2 className="text-3xl font-bold text-gray-900">কেন হাবিব ফার্নিচার বেছে নেবেন?</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
@@ -185,8 +185,8 @@ export default async function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-lg mb-2">Quality Guarantee</h3>
-              <p className="text-gray-600 text-sm">Premium materials and craftsmanship</p>
+              <h3 className="font-semibold text-lg mb-2">মানের গ্যারেন্টি</h3>
+              <p className="text-gray-600 text-sm">প্রিমিয়াম মানের উপকরণ ও কারুকার্য</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -194,8 +194,8 @@ export default async function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-lg mb-2">Best Prices</h3>
-              <p className="text-gray-600 text-sm">Competitive pricing and EMI options</p>
+              <h3 className="font-semibold text-lg mb-2">সেরা দাম</h3>
+              <p className="text-gray-600 text-sm">প্রতিযোগিতামূলঙ5 দাম এবং কিস্তির সুবিধা</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -203,8 +203,8 @@ export default async function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-lg mb-2">Fast Delivery</h3>
-              <p className="text-gray-600 text-sm">Quick delivery across Bangladesh</p>
+              <h3 className="font-semibold text-lg mb-2">দ্রুত ডেলিভারি</h3>
+              <p className="text-gray-600 text-sm">সম্পূর্ণ বাংলাদেশে দ্রুত ডেলিভারি</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -212,8 +212,8 @@ export default async function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-lg mb-2">After Sales Service</h3>
-              <p className="text-gray-600 text-sm">Dedicated support and warranty</p>
+              <h3 className="font-semibold text-lg mb-2">বিক্রয় পরবর্তী সেবা</h3>
+              <p className="text-gray-600 text-sm">সমর্পিত সহায়তা এবং ওয়ারেন্টি</p>
             </div>
           </div>
         </div>
