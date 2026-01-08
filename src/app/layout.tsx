@@ -14,58 +14,61 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Quick Navigation */}
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">QUICK NAVIGATION</h3>
+            <h3 className="text-white font-semibold text-lg mb-4">দ্রুত নেভিগেশন</h3>
             <ul className="space-y-2">
-              <li><Link href="/about" className="hover:text-white transition">About Us</Link></li>
-              <li><Link href="/products" className="hover:text-white transition">All Products</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition">Contact Us</Link></li>
-              <li><Link href="/admin/login" className="hover:text-white transition">My Profile</Link></li>
+              <li><Link href="/about" className="hover:text-white transition">আমাদের সম্পর্কে</Link></li>
+              <li><Link href="/products" className="hover:text-white transition">সকল পণ্য</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition">যোগাযোগ</Link></li>
+              <li><Link href="/admin/login" className="hover:text-white transition">আমার প্রোফাইল</Link></li>
             </ul>
           </div>
 
           {/* Knowledge Base */}
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">KNOWLEDGE BASE</h3>
+            <h3 className="text-white font-semibold text-lg mb-4">তথ্য ভান্ডার</h3>
             <ul className="space-y-2">
-              <li><Link href="/faq" className="hover:text-white transition">FAQ</Link></li>
-              <li><Link href="/return-policy" className="hover:text-white transition">Return Policy</Link></li>
-              <li><Link href="/emi" className="hover:text-white transition">EMI</Link></li>
+              <li><Link href="/faq" className="hover:text-white transition">সাধারণ প্রশ্ন</Link></li>
+              <li><Link href="/return-policy" className="hover:text-white transition">রিটার্ন নীতি</Link></li>
+              <li><Link href="/emi" className="hover:text-white transition">কিস্তি সুবিধা</Link></li>
             </ul>
           </div>
 
           {/* Information */}
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">INFORMATION</h3>
+            <h3 className="text-white font-semibold text-lg mb-4">তথ্য</h3>
             <ul className="space-y-2">
-              <li><Link href="/new-arrival" className="hover:text-white transition">New Arrival</Link></li>
-              <li><Link href="/delivery" className="hover:text-white transition">Delivery</Link></li>
-              <li><Link href="/warranty" className="hover:text-white transition">Warranty</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link></li>
+              <li><Link href="/new-arrival" className="hover:text-white transition">নতুন সংগ্রহ</Link></li>
+              <li><Link href="/delivery" className="hover:text-white transition">ডেলিভারি</Link></li>
+              <li><Link href="/warranty" className="hover:text-white transition">ওয়ারেন্টি</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-white transition">গোপনীয়তা নীতি</Link></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">CONTACT US</h3>
+            <h3 className="text-white font-semibold text-lg mb-4">যোগাযোগ</h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>Dhaka, Bangladesh</span>
+                <span>মেইন রোড, ব্যাংক এশিয়ার দক্ষিণ পাশে, মহাদেবপুর, নওগাঁ</span>
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <a href="tel:+8801700000000" className="hover:text-white">+880 1700-000000</a>
+                <div>
+                  <a href="tel:+8801740649667" className="hover:text-white block">01740649667</a>
+                  <a href="tel:+8801717008714" className="hover:text-white block">01717008714</a>
+                </div>
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <a href="mailto:info@habibfurniture.com" className="hover:text-white">info@habibfurniture.com</a>
+                <a href="mailto:habibfurniture@gmail.com" className="hover:text-white">habibfurniture@gmail.com</a>
               </li>
             </ul>
             <div className="flex gap-3 mt-4">
@@ -84,20 +87,20 @@ function Footer() {
 
         {/* Payment Methods */}
         <div className="border-t border-gray-800 pt-8">
-          <h3 className="text-white font-semibold text-sm mb-4">WE ACCEPT</h3>
+          <h3 className="text-white font-semibold text-sm mb-4">আমরা গ্রহণ করি</h3>
           <div className="flex flex-wrap gap-3 mb-8">
-            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">Visa</div>
-            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">Mastercard</div>
-            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">bKash</div>
-            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">Nagad</div>
-            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">Rocket</div>
-            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">Cash on Delivery</div>
+            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">ভিসা</div>
+            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">মাস্টারকার্ড</div>
+            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">বিকাশ</div>
+            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">নগদ</div>
+            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">রকেট</div>
+            <div className="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700">ক্যাশ অন ডেলিভারি</div>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="border-t border-gray-800 pt-6 text-center text-sm">
-          <p>Copyright © {new Date().getFullYear()} Habib Furniture. All right reserved.</p>
+          <p>কপিরাইট © {new Date().getFullYear()} হাবিব ফার্নিচার। সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
       </div>
     </footer>
@@ -127,15 +130,15 @@ function MobileMenu() {
   if (!isOpen) return null;
 
   const menuItems = [
-    { href: '/products', label: 'All Products', icon: '🏠' },
-    { href: '/products?category=bedroom', label: 'Bedroom', icon: '🛏️' },
-    { href: '/products?category=living', label: 'Living', icon: '🛋️' },
-    { href: '/products?category=dining', label: 'Dining', icon: '🍽️' },
-    { href: '/products?category=office', label: 'Office', icon: '💼' },
-    { href: '/products?category=kitchen', label: 'Kitchen', icon: '🍳' },
-    { href: '/products?category=mattress', label: 'Mattress', icon: '🛏️' },
-    { href: '#', label: 'Contact Us', icon: '📞' },
-    { href: '/admin/login', label: 'My Profile', icon: '👤' },
+    { href: '/products', label: 'সকল পণ্য', icon: '🏠' },
+    { href: '/products?category=bedroom', label: 'বেডরুম', icon: '🛏️' },
+    { href: '/products?category=living', label: 'লিভিং রুম', icon: '🛋️' },
+    { href: '/products?category=dining', label: 'ডাইনিং', icon: '🍽️' },
+    { href: '/products?category=office', label: 'অফিস', icon: '💼' },
+    { href: '/products?category=kitchen', label: 'রান্নাঘরের ক্যাবিনেট', icon: '🍳' },
+    { href: '/products?category=mattress', label: 'ম্যাট্রেস', icon: '🛏️' },
+    { href: '#', label: 'যোগাযোগ', icon: '📞' },
+    { href: '/admin/login', label: 'আমার প্রোফাইল', icon: '👤' },
   ];
 
   return (
@@ -150,7 +153,7 @@ function MobileMenu() {
       <div className="fixed top-0 left-0 h-full w-80 bg-white z-50 shadow-2xl overflow-y-auto lg:hidden">
         <div className="p-6">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-gray-800">Menu</h2>
+            <h2 className="text-2xl font-bold text-gray-800">মেনু</h2>
             <button
               onClick={() => setIsOpen(false)}
               className="p-2 hover:bg-gray-100 rounded-lg transition"
@@ -177,9 +180,12 @@ function MobileMenu() {
           </nav>
 
           <div className="mt-8 pt-6 border-t">
-            <p className="text-sm text-gray-600 mb-2">Customer Support</p>
-            <a href="tel:+8801234567890" className="text-lg font-semibold text-red-600">
-              +880 123 456 7890
+            <p className="text-sm text-gray-600 mb-2">কাস্টমার সাপোর্ট</p>
+            <a href="tel:+8801740649667" className="text-lg font-semibold text-red-600 block">
+              01740649667
+            </a>
+            <a href="tel:+8801717008714" className="text-lg font-semibold text-red-600 block">
+              01717008714
             </a>
           </div>
         </div>
