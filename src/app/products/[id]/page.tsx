@@ -11,9 +11,9 @@ function formatTaka(value: number | string) {
   return `৳${num.toLocaleString("en-BD")}`;
 }
 
-async function getProduct(slug: string) {
+async function getProduct(id: string) {
   return await prisma.product.findUnique({
-    where: { slug, isActive: true },
+    where: { id, isActive: true },
     select: {
       id: true,
       name: true,
@@ -38,10 +38,10 @@ async function getProduct(slug: string) {
 export default async function ProductDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = await params;
-  const product = await getProduct(slug);
+  const { id } = await params;
+  const product = await getProduct(id);
   if (!product) notFound();
 
   const settings = await getDeliverySettings();

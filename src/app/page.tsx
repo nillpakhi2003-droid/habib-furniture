@@ -129,7 +129,7 @@ export default async function HomePage() {
               return (
                 <Link
                   key={product.id}
-                  href={`/products/${product.slug}`}
+                  href={`/products/${product.id}`}
                   className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition"
                 >
                   <div className="relative aspect-square bg-gray-100 overflow-hidden">

@@ -53,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 group">
       <div className="relative aspect-square overflow-hidden bg-gray-100">
-        <Link href={`/products/${product.slug}`}>
+        <Link href={`/products/${product.id}`}>
           {isExternalImage ? (
             <Image
               src={imageSrc}
@@ -117,7 +117,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
 
-        <Link href={`/products/${product.slug}`}>
+        <Link href={`/products/${product.id}`}>
           <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-red-600 transition">
             {product.name}
           </h3>
@@ -135,7 +135,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <Link
-          href={`/products/${product.slug}`}
+          href={`/products/${product.id}`}
           className="block w-full text-center border-2 border-gray-200 text-gray-700 py-2 rounded-lg font-medium hover:border-red-600 hover:text-red-600 transition"
         >
           View Details

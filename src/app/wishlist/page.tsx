@@ -62,7 +62,7 @@ export default function WishlistPage() {
               </div>
               <div className="p-4">
                 <Link
-                  href={`/products/${item.slug}`}
+                  href={`/products/${item.productId}`}
                   className="text-lg font-semibold text-gray-800 hover:text-red-600 block mb-2 line-clamp-2"
                 >
                   {item.productName}
@@ -86,7 +86,7 @@ export default function WishlistPage() {
                     Add to Cart
                   </button>
                   <Link
-                    href={`/products/${item.slug}`}
+                    href={`/products/${item.productId}`}
                     className="flex-1 border-2 border-red-600 text-red-600 text-center px-4 py-2 rounded-lg font-medium hover:bg-red-50 transition"
                   >
                     View
