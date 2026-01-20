@@ -153,8 +153,8 @@ if [ ! -f ".env" ]; then
     fi
 fi
 
-# Step 6: Check database connection
-echo "7️⃣ Checking database connection..."
+# Step 6: Configure environment variables
+echo "7️⃣ Configuring environment variables..."
 source .env 2>/dev/null || true
 
 if [ -z "$DATABASE_URL" ]; then
@@ -162,6 +162,55 @@ if [ -z "$DATABASE_URL" ]; then
     exit 1
 fi
 
+# Check and fix AUTH_SECRET
+if [ -z "$AUTH_SECRET" ] || [ ${#AUTH_SECRET} -lt 32 ]; then
+    echo -e "${YELLOW}⚠️  AUTH_SECRET missing or too short. Generating...${NC}"
+    NEW_SECRET=$(openssl rand -hex 32)
+    if grep -q "^AUTH_SECRET=" .env; then
+        sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=\"$NEW_SECRET\"|" .env
+    else
+        echo "AUTH_SECRET=\"$NEW_SECRET\"" >> .env
+    fi
+    echo -e "${GREEN}✅ AUTH_SECRET generated${NC}"
+fi
+
+# Set NODE_ENV to production
+if ! grep -q "^NODE_ENV=\"production\"" .env; then
+    if grep -q "^NODE_ENV=" .env; then
+        sed -i 's|^NODE_ENV=.*|NODE_ENV="production"|' .env
+    else
+        echo 'NODE_ENV="production"' >> .env
+    fi
+    echo -e "${GREEN}✅ NODE_ENV set to production${NC}"
+fi
+
+# Configure NEXT_PUBLIC_APP_URL
+if ! grep -q "^NEXT_PUBLIC_APP_URL=" .env; then
+    echo "NEXT_PUBLIC_APP_URL=\"http://$DOMAIN\"" >> .env
+    echo -e "${GREEN}✅ NEXT_PUBLIC_APP_URL configured${NC}"
+else
+    sed -i "s|^NEXT_PUBLIC_APP_URL=.*|NEXT_PUBLIC_APP_URL=\"http://$DOMAIN\"|" .env
+fi
+
+# Configure NEXT_ALLOWED_ORIGINS (critical for server actions)
+if ! grep -q "^NEXT_ALLOWED_ORIGINS=" .env; then
+    echo "NEXT_ALLOWED_ORIGINS=\"http://$DOMAIN,http://www.$DOMAIN\"" >> .env
+    echo -e "${GREEN}✅ NEXT_ALLOWED_ORIGINS configured${NC}"
+else
+    sed -i "s|^NEXT_ALLOWED_ORIGINS=.*|NEXT_ALLOWED_ORIGINS=\"http://$DOMAIN,http://www.$DOMAIN\"|" .env
+fi
+
+# Set PORT
+if ! grep -q "^PORT=" .env; then
+    echo "PORT=10000" >> .env
+fi
+
+# Re-source after modifications
+source .env
+
+echo "8️⃣ Checking database connection..."
+
+echo "8️⃣ Checking database connection..."
 # Step 7: Check if database is accessible
 npx prisma db push --skip-generate 2>&1 | grep -q "error" && {
     echo -e "${RED}❌ Database connection failed${NC}"
@@ -172,7 +221,7 @@ npx prisma db push --skip-generate 2>&1 | grep -q "error" && {
 echo -e "${GREEN}✅ Database connection OK${NC}"
 
 # Step 8: Build the application
-echo "8️⃣ Building application..."
+echo "9️⃣ Building application..."
 npm run build
 
 if [ $? -ne 0 ]; then
@@ -184,7 +233,7 @@ fi
 mkdir -p logs
 
 # Step 10: Start with PM2
-echo "9️⃣ Starting application with PM2..."
+echo "🔟 Starting application with PM2..."
 pm2 start ecosystem.config.js
 
 # Step 11: Save PM2 configuration
