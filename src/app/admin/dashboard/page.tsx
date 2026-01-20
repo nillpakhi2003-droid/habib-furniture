@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
+import { getAdminSession } from "../../../lib/auth/session";
 
 function formatTaka(value: number | string) {
   const num = Number(value);
@@ -108,6 +110,12 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default async function DashboardPage() {
+  // Authentication check
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   const stats = await getDashboardStats();
 
   return (

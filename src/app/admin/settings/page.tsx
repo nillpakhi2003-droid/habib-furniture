@@ -1,5 +1,7 @@
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
+import { getAdminSession } from "../../../lib/auth/session";
 
 async function getSettings() {
   let settings = await prisma.settings.findFirst();
@@ -58,6 +60,12 @@ async function updateSettingsAction(formData: FormData) {
 }
 
 export default async function SettingsPage() {
+  // Authentication check
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   const settings = await getSettings();
 
   return (

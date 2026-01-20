@@ -1,11 +1,22 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getAdminSession } from "../../lib/auth/session";
 import { adminLogoutAction } from "./logout/actions";
 
 export const metadata = {
   title: "Habib Furniture Admin",
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // Server-side authentication check
+  const session = await getAdminSession();
+  
+  // Allow login page to pass through
+  if (!session) {
+    // This will be handled by middleware, but adding as backup
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b shadow-sm">

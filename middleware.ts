@@ -12,7 +12,10 @@ type SessionPayload = {
 
 function getAuthSecret(): string | null {
   const secret = process.env.AUTH_SECRET;
-  if (!secret || secret.length < 32) return null;
+  if (!secret || secret.length < 32) {
+    console.error('❌ AUTH_SECRET not configured or too short. Admin routes are NOT protected!');
+    return null;
+  }
   return secret;
 }
 
@@ -65,7 +68,10 @@ function parsePayload(encoded: string): SessionPayload | null {
 
 async function validateAdminSession(req: NextRequest): Promise<SessionPayload | null> {
   const secret = getAuthSecret();
-  if (!secret) return null;
+  if (!secret) {
+    console.error('❌ Cannot validate admin session - AUTH_SECRET missing');
+    return null;
+  }
 
   const cookie = req.cookies.get(COOKIE_NAME)?.value;
   if (!cookie) return null;

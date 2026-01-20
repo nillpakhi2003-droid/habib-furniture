@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
+import { getAdminSession } from "../../../lib/auth/session";
 import { ToggleProductButton } from "./ToggleProductButton";
 
 function formatTaka(value: number | string) {
@@ -33,6 +35,12 @@ async function getProducts() {
 }
 
 export default async function ProductsPage() {
+  // Authentication check
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   const products = await getProducts();
 
   return (

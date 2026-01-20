@@ -1,5 +1,7 @@
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
+import { getAdminSession } from "../../../lib/auth/session";
 import { updateOrderStatusAction, createDemoOrderAction } from "./actions";
 
 function formatTaka(value: number | string) {
@@ -90,6 +92,12 @@ export default async function OrdersPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
+  // Authentication check
+  const session = await getAdminSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   const params = await searchParams;
   const statusFilter = params?.status;
   const orders = await getOrders(statusFilter);
