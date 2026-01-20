@@ -20,14 +20,14 @@ export default function NewProductPage() {
       return;
     }
 
-    // Validate file types and sizes
+    // Validate file sizes only (allow all image formats)
     const validFiles = files.filter((file) => {
       if (!file.type.startsWith("image/")) {
         alert(`${file.name} is not an image`);
         return false;
       }
-      if (file.size > 5 * 1024 * 1024) {
-        alert(`${file.name} is too large (max 5MB)`);
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`${file.name} is too large (max 10MB)`);
         return false;
       }
       return true;
@@ -95,6 +95,7 @@ export default function NewProductPage() {
             const discountPrice = discountPriceRaw ? Number(discountPriceRaw) : null;
             const stock = Number(formData.get("stock") || 0);
             const isActive = formData.get("isActive") === "on";
+            const isFeatured = formData.get("isFeatured") === "on";
             const dimensionsRaw = formData.get("dimensions") as string | null;
             let dimensions: unknown = undefined;
             if (dimensionsRaw) {
@@ -115,6 +116,7 @@ export default function NewProductPage() {
               stock,
               dimensions,
               isActive,
+              isFeatured,
               imagePaths,
             });
 
@@ -289,10 +291,17 @@ export default function NewProductPage() {
               placeholder="10"
             />
           </label>
+        </div>
 
-          <label className="flex items-center gap-2 mt-6">
+        <div className="flex gap-6">
+          <label className="flex items-center gap-2">
             <input name="isActive" type="checkbox" defaultChecked className="h-4 w-4" />
-            <span className="text-sm text-gray-700">Active</span>
+            <span className="text-sm text-gray-700 font-medium">Active (visible to customers)</span>
+          </label>
+
+          <label className="flex items-center gap-2">
+            <input name="isFeatured" type="checkbox" className="h-4 w-4" />
+            <span className="text-sm text-gray-700 font-medium">Featured (show on homepage)</span>
           </label>
         </div>
 

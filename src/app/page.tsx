@@ -9,7 +9,10 @@ function formatTaka(value: number | string) {
 
 async function getFeaturedProducts() {
   return await prisma.product.findMany({
-    where: { isActive: true },
+    where: { 
+      isActive: true,
+      isFeatured: true 
+    },
     select: {
       id: true,
       name: true,

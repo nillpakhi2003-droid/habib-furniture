@@ -15,6 +15,7 @@ async function getProduct(id: string) {
       discountPrice: true,
       stock: true,
       isActive: true,
+      isFeatured: true,
       dimensions: true,
       images: {
         orderBy: { isPrimary: "desc" },

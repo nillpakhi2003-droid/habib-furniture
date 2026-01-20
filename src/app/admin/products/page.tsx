@@ -22,6 +22,7 @@ async function getProducts() {
       discountPrice: true,
       stock: true,
       isActive: true,
+      isFeatured: true,
       images: {
         where: { isPrimary: true },
         take: 1,
