@@ -43,11 +43,16 @@ npm run dev
 
 ### 📚 Documentation
 
+#### 🆘 VPS Troubleshooting (Start Here!)
+- **[Quick Fix Guide](./QUICK_FIX.md)** ⚡ **Product add/edit/delete না হলে এটা দেখুন!**
+- [VPS Troubleshooting](./VPS_TROUBLESHOOTING.md) - Complete troubleshooting guide
+- [Build Error Fix](./BUILD_FIX.md) - Build error হলে দেখুন
+
+#### 📖 Setup Guides
 - [Production Setup](./PRODUCTION_CONFIG.md)
 - [Ubuntu VPS Deployment](./UBUNTU_SETUP.md)
 - [Self Hosting Guide](./SELF_HOSTING.md)
 - [Deployment Guide](./DEPLOYMENT.md)
-- [Build Error Fix](./BUILD_FIX.md) ⚠️ **VPS এ build error হলে দেখুন**
 
 ### 🔐 Admin Account Creation
 
@@ -124,7 +129,33 @@ Run:
 node create-admin.js
 ```
 
-## 🔧 VPS Build Error Fix
+## � VPS Deployment Issues?
+
+### Product Add/Edit/Delete Not Working?
+
+**Quick Fix (2 commands):**
+```bash
+cd /var/www/habib-furniture
+sudo bash scripts/fix-vps-deployment.sh
+```
+
+Enter your domain when prompted. See [QUICK_FIX.md](./QUICK_FIX.md) for details.
+
+### Diagnostic Tools
+
+**Check what's wrong:**
+```bash
+sudo bash scripts/diagnose-deployment.sh
+```
+
+**Available fix scripts:**
+- `scripts/fix-vps-deployment.sh` - Complete automated fix
+- `scripts/diagnose-deployment.sh` - Full system diagnostics
+- `scripts/fix-build.sh` - Build error fix
+- `scripts/setup-nginx.sh` - Nginx configuration
+- `scripts/setup-production.sh` - Full production setup
+
+### Build Error Fix
 
 যদি VPS এ build করার সময় error আসে:
 
