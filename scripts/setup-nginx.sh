@@ -54,8 +54,7 @@ server {
 
     # Static files caching
     location /_next/static {
-        proxy_cache STATIC;
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:${APP_PORT};
         add_header Cache-Control "public, max-age=31536000, immutable";
     }
 
