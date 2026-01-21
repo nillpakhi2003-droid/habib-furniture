@@ -4,7 +4,6 @@ import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { updateProductAction, deleteProductImageAction, setPrimaryImageAction, addProductImagesAction } from "../../actions";
 import { uploadMultipleImages } from "../../upload";
-import Image from "next/image";
 
 type Product = {
   id: string;
@@ -148,11 +147,10 @@ export function EditProductForm({ product }: { product: Product }) {
                   key={image.id}
                   className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group"
                 >
-                  <Image
+                  <img
                     src={image.path}
                     alt="Product"
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                   {image.isPrimary && (
                     <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded font-semibold">
@@ -212,14 +210,14 @@ export function EditProductForm({ product }: { product: Product }) {
                   key={index}
                   className="relative aspect-square rounded-lg overflow-hidden border-2 border-dashed border-green-300 group"
                 >
-                  <Image
+                  <img
                     src={url}
                     alt="New image"
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded">
                     New
+                  </div>                    New
                   </div>
                   <button
                     type="button"
