@@ -60,6 +60,12 @@ export default async function ProductsPage() {
             View Orders
           </Link>
           <Link
+            href="/admin/products/bulk-add"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+          >
+            📦 Bulk Add
+          </Link>
+          <Link
             href="/admin/products/new"
             className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
           >

@@ -32,14 +32,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'habibfurniture.com.bd',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.habibfurniture.com.bd',
-      },
-      {
-        protocol: 'https',
         hostname: 'images.pexels.com',
       },
       {

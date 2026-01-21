@@ -68,8 +68,8 @@ export async function uploadMultipleImages(formData: FormData): Promise<{ ok: tr
       return { ok: false, error: "No files provided" };
     }
 
-    if (files.length > 20) {
-      return { ok: false, error: "Maximum 20 images allowed at once" };
+    if (files.length > 100) {
+      return { ok: false, error: "Maximum 100 images allowed at once" };
     }
 
     const paths: string[] = [];
