@@ -73,22 +73,23 @@ export default function NewProductPage() {
           startTransition(async () => {
             setUploading(true);
 
-            // Upload images first
-            let imagePaths: string[] = [];
-            if (images.length > 0) {
-              const uploadFormData = new FormData();
-              images.forEach((image) => {
-                uploadFormData.append("files", image);
-              });
+            try {
+              // Upload images first
+              let imagePaths: string[] = [];
+              if (images.length > 0) {
+                const uploadFormData = new FormData();
+                images.forEach((image) => {
+                  uploadFormData.append("files", image);
+                });
 
-              const uploadResult = await uploadMultipleImages(uploadFormData);
-              if (!uploadResult.ok) {
-                alert(uploadResult.error);
-                setUploading(false);
-                return;
+                const uploadResult = await uploadMultipleImages(uploadFormData);
+                if (!uploadResult.ok) {
+                  alert(`Upload failed: ${uploadResult.error}`);
+                  setUploading(false);
+                  return;
+                }
+                imagePaths = uploadResult.paths;
               }
-              imagePaths = uploadResult.paths;
-            }
 
             const price = Number(formData.get("price") || 0);
             const discountPriceRaw = formData.get("discountPrice") as string | null;
@@ -123,11 +124,17 @@ export default function NewProductPage() {
             setUploading(false);
 
             if (res.ok) {
+              alert("✅ Product created successfully!");
               router.push("/admin/products");
               router.refresh();
             } else {
-              alert(res.error || "Failed to create product");
+              alert(`Failed to create product: ${res.error || "Unknown error"}`);
             }
+          } catch (error) {
+            setUploading(false);
+            console.error("Product creation error:", error);
+            alert(`Network error: ${error instanceof Error ? error.message : "Unable to connect to server"}`);
+          }
           });
         }}
       >
@@ -166,7 +173,7 @@ export default function NewProductPage() {
         {/* Image Upload Section */}
         <div className="space-y-4">
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Product Images (Max 10)</span>
+            <span className="text-sm font-medium text-gray-700">Product Images (Max 20)</span>
             <div className="mt-2 flex items-center gap-4">
               <input
                 type="file"
@@ -184,7 +191,7 @@ export default function NewProductPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 16m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="text-sm text-gray-600">Click to upload images</span>
-                <span className="block text-xs text-gray-400 mt-1">JPG, PNG, WEBP, GIF (max 5MB each)</span>
+                <span className="block text-xs text-gray-400 mt-1">All image formats supported (max 10MB each)</span>
               </label>
             </div>
           </label>

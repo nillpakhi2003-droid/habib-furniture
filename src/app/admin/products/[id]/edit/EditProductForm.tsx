@@ -255,27 +255,32 @@ export function EditProductForm({ product }: { product: Product }) {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
           startTransition(async () => {
-            const price = Number(formData.get("price") || 0);
-            const discountPriceRaw = formData.get("discountPrice") as string | null;
-            const discountPrice = discountPriceRaw ? Number(discountPriceRaw) : null;
-            const isFeatured = formData.get("isFeatured") === "on";
+            try {
+              const price = Number(formData.get("price") || 0);
+              const discountPriceRaw = formData.get("discountPrice") as string | null;
+              const discountPrice = discountPriceRaw ? Number(discountPriceRaw) : null;
+              const isFeatured = formData.get("isFeatured") === "on";
 
-            const result = await updateProductAction(product.id, {
-              name: formData.get("name") as string,
-              slug: formData.get("slug") as string,
-              description: (formData.get("description") as string) || null,
-              category: (formData.get("category") as string) || null,
-              price,
-              discountPrice,
-              isFeatured,
-            });
+              const result = await updateProductAction(product.id, {
+                name: formData.get("name") as string,
+                slug: formData.get("slug") as string,
+                description: (formData.get("description") as string) || null,
+                category: (formData.get("category") as string) || null,
+                price,
+                discountPrice,
+                isFeatured,
+              });
 
-            if (result.ok) {
-              alert("Product updated successfully!");
-              router.push("/admin/products");
-              router.refresh();
-            } else {
-              alert(result.error || "Failed to update product");
+              if (result.ok) {
+                alert("✅ Product updated successfully!");
+                router.push("/admin/products");
+                router.refresh();
+              } else {
+                alert(`Failed to update product: ${result.error || "Unknown error"}`);
+              }
+            } catch (error) {
+              console.error("Product update error:", error);
+              alert(`Network error: ${error instanceof Error ? error.message : "Unable to connect to server"}`);
             }
           });
         }}
