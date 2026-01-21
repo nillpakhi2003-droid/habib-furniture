@@ -112,6 +112,13 @@ export default async function ProductsPage() {
                             src={product.images[0].path}
                             alt={product.name}
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const parent = e.currentTarget.parentElement;
+                              if (parent) {
+                                parent.innerHTML = '<span class="text-gray-400 text-xs">No image</span>';
+                              }
+                            }}
                           />
                         ) : (
                           <span className="text-gray-400 text-xs">No image</span>
