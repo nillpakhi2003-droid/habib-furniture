@@ -5,6 +5,10 @@ import { OrderForm } from "./OrderForm";
 import { ProductViewTracker } from "../../../components/ProductViewTracker";
 import { WishlistButton } from "../../../components/WishlistButton";
 
+// Force dynamic rendering so product images update immediately after upload
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function formatTaka(value: number | string) {
   const num = Number(value);
   if (!Number.isFinite(num)) return "৳0";

@@ -4,6 +4,10 @@ import { prisma } from "../../../lib/prisma";
 import { getAdminSession } from "../../../lib/auth/session";
 import { ToggleProductButton } from "./ToggleProductButton";
 
+// Always render fresh data (no static cache) so new images show immediately
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function formatTaka(value: number | string) {
   const num = Number(value);
   if (!Number.isFinite(num)) return "৳0";
