@@ -69,10 +69,6 @@ export default async function ProductDetailPage({
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
-                    const parent = e.currentTarget.parentElement;
-                    if (parent) {
-                      parent.innerHTML = '<div class="w-full h-full flex items-center justify-center text-gray-400">Image not available</div>';
-                    }
                   }}
                 />
               ) : (
