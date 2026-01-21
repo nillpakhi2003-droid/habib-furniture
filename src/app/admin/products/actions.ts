@@ -62,6 +62,9 @@ export async function createProductAction(input: {
     return { ok: true, data: product };
   } catch (err) {
     console.error("Create product error:", err);
+    if ((err as any).code === 'P2002') {
+      return { ok: false, error: "A product with this slug (name) already exists." };
+    }
     return { ok: false, error: "Create failed" };
   }
 }

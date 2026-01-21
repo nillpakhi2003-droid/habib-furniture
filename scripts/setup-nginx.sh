@@ -28,7 +28,14 @@ server {
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
     # Increase upload size for images
-    client_max_body_size 10M;
+    client_max_body_size 50M;
+
+    # Serve uploaded images directly (bypass Next.js)
+    location /uploads/ {
+        alias /var/www/habib-furniture/public/uploads/;
+        access_log off;
+        expires max;
+    }
 
     # Logging
     access_log /var/log/nginx/habib-furniture-access.log;
