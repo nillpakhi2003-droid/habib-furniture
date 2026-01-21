@@ -13,7 +13,11 @@ fi
 DOMAIN=$1
 APP_PORT=${2:-3000}
 
+# Get current project directory
+PROJECT_DIR=$(pwd)
+
 echo "🌐 Configuring Nginx for domain: $DOMAIN (app on :$APP_PORT)"
+echo "📂 Project directory: $PROJECT_DIR"
 
 # Create Nginx configuration
 cat > /tmp/habib-furniture << EOF
@@ -32,7 +36,7 @@ server {
 
     # Serve uploaded images directly (bypass Next.js)
     location /uploads/ {
-        alias /var/www/habib-furniture/public/uploads/;
+        alias ${PROJECT_DIR}/public/uploads/;
         access_log off;
         expires max;
     }
