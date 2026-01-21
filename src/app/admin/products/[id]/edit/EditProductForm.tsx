@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { updateProductAction, deleteProductImageAction, setPrimaryImageAction, addProductImagesAction } from "../../actions";
 import { uploadMultipleImages } from "../../upload";
@@ -32,6 +32,8 @@ export function EditProductForm({ product }: { product: Product }) {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [deletingImage, setDeletingImage] = useState<string | null>(null);
+  const [inputKey, setInputKey] = useState(Date.now()); // Key to force input reset
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -110,6 +112,13 @@ export function EditProductForm({ product }: { product: Product }) {
         setNewImages([]);
         previewUrls.forEach(url => URL.revokeObjectURL(url));
         setPreviewUrls([]);
+        
+        // Reset file input so user can select files again
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        setInputKey(Date.now()); // Force input re-render
+        
         router.refresh();
       } else {
         alert(`Failed to save images: ${addResult.error || "Unknown error"}`);
@@ -183,6 +192,8 @@ export function EditProductForm({ product }: { product: Product }) {
             Add New Images
           </label>
           <input
+            key={inputKey}
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             multiple
