@@ -49,32 +49,33 @@ export default async function ProductsPage() {
   const products = await getProducts();
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <h1 className="text-3xl font-bold">Products</h1>
         <div className="flex gap-3">
           <Link
             href="/admin/orders"
-            className="border border-gray-300 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-50 transition"
+            className="border border-gray-300 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-50 transition text-sm"
           >
-            View Orders
+            Orders
           </Link>
           <Link
             href="/admin/products/bulk-add"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition text-sm"
           >
-            📦 Bulk Add
+            📦 Bulk
           </Link>
           <Link
             href="/admin/products/new"
-            className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
+            className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition text-sm"
           >
-            Add Product
+            + Add
           </Link>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white rounded-lg shadow-sm border overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
             <tr>
@@ -192,6 +193,101 @@ export default async function ProductsPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {products.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-sm p-8 text-center text-gray-500">
+            No products found. Add your first product to get started.
+          </div>
+        ) : (
+          products.map((product) => {
+            const displayPrice = product.discountPrice || product.price;
+            const isLowStock = product.stock < 5;
+
+            return (
+              <div key={product.id} className="bg-white rounded-lg shadow-sm border p-4">
+                <div className="flex gap-3">
+                  {/* Image */}
+                  <div className="flex-shrink-0">
+                    <div className="w-20 h-20 bg-gray-100 rounded overflow-hidden">
+                      {product.images[0]?.path ? (
+                        <img
+                          src={product.images[0].path}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                          No image
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 text-sm truncate">{product.name}</h3>
+                    <p className="text-xs text-gray-500 truncate mt-0.5">{product.slug}</p>
+                    
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 capitalize">
+                        {product.category || "Uncategorized"}
+                      </span>
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
+                          product.isActive
+                            ? "bg-green-100 text-green-700"
+                            : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {product.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-gray-900 text-sm">
+                          {formatTaka(displayPrice.toString())}
+                        </span>
+                        {product.discountPrice && (
+                          <span className="text-xs text-gray-400 line-through">
+                            {formatTaka(product.price.toString())}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-gray-600">Stock: {product.stock}</span>
+                        {isLowStock && (
+                          <span className="px-1.5 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded">
+                            Low
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="mt-3 flex gap-2">
+                  <Link
+                    href={`/admin/products/${product.id}/edit`}
+                    className="flex-1 px-4 py-2.5 text-sm font-semibold text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Edit
+                  </Link>
+                  <div className="flex-1">
+                    <ToggleProductButton
+                      productId={product.id}
+                      isActive={product.isActive}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

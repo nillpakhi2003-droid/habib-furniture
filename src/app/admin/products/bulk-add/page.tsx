@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { uploadMultipleImages } from '../upload';
 import { createProductAction } from '../actions';
 
 export default function BulkAddPage() {
@@ -38,38 +37,43 @@ export default function BulkAddPage() {
       let successCount = 0;
       let failedCount = 0;
 
-      // Process one file at a time to avoid any timeout issues
+      // Process one file at a time using direct API call
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
 
         try {
-          // Upload single image
-          const formData = new FormData();
-          formData.append('files', file);
+          // Upload single image via API route
+          const uploadFormData = new FormData();
+          uploadFormData.append('file', file);
 
-          const uploadResult = await uploadMultipleImages(formData);
-          
-          if (!uploadResult.ok || uploadResult.paths.length === 0) {
-            console.error('Upload failed for:', file.name, uploadResult.error);
+          const uploadResponse = await fetch('/api/bulk-upload', {
+            method: 'POST',
+            body: uploadFormData,
+          });
+
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json();
+            console.error('Upload failed for:', file.name, errorData.error);
             failedCount++;
             setProgress({ current: i + 1, total: selectedFiles.length });
-            continue; // Skip to next file
+            continue;
           }
 
-          const imagePath = uploadResult.paths[0];
+          const uploadData = await uploadResponse.json();
+          const imagePath = uploadData.path;
           
           // Generate product name from filename
-          const fileName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+          const fileName = file.name.replace(/\.[^/.]+$/, '');
           const productName = fileName
             .replace(/[-_]/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase()); // Capitalize words
+            .replace(/\b\w/g, l => l.toUpperCase());
           
           const slug = fileName
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-|-$/g, '');
 
-          // Create product
+          // Create product using server action
           const result = await createProductAction({
             name: productName,
             slug: `${slug}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -95,8 +99,10 @@ export default function BulkAddPage() {
 
         setProgress({ current: i + 1, total: selectedFiles.length });
         
-        // Small delay to prevent overwhelming the server
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Small delay between uploads
+        if (i < selectedFiles.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
       }
 
       setCompleted(true);
