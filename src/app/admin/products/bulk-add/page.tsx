@@ -35,64 +35,72 @@ export default function BulkAddPage() {
     setProgress({ current: 0, total: selectedFiles.length });
 
     try {
-      // Upload all images first
-      const formData = new FormData();
-      selectedFiles.forEach(file => {
-        formData.append('files', file);
-      });
-
-      const uploadResult = await uploadMultipleImages(formData);
-      
-      if (!uploadResult.ok) {
-        alert('Failed to upload images: ' + uploadResult.error);
-        setUploading(false);
-        return;
-      }
-
-      // Create a product for each uploaded image
       let successCount = 0;
       let failedCount = 0;
+      const batchSize = 5; // Upload 5 images at a time to avoid timeout
 
-      for (let i = 0; i < uploadResult.paths.length; i++) {
-        const imagePath = uploadResult.paths[i];
-        const originalFile = selectedFiles[i];
+      // Process files in batches
+      for (let batchStart = 0; batchStart < selectedFiles.length; batchStart += batchSize) {
+        const batchEnd = Math.min(batchStart + batchSize, selectedFiles.length);
+        const batchFiles = selectedFiles.slice(batchStart, batchEnd);
+
+        // Upload batch of images
+        const formData = new FormData();
+        batchFiles.forEach(file => {
+          formData.append('files', file);
+        });
+
+        const uploadResult = await uploadMultipleImages(formData);
         
-        // Generate product name from filename
-        const fileName = originalFile.name.replace(/\.[^/.]+$/, ''); // Remove extension
-        const productName = fileName
-          .replace(/[-_]/g, ' ')
-          .replace(/\b\w/g, l => l.toUpperCase()); // Capitalize words
-        
-        const slug = fileName
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
-
-        try {
-          const result = await createProductAction({
-            name: productName,
-            slug: `${slug}-${Date.now()}`, // Add timestamp to ensure uniqueness
-            description: '',
-            category: 'Bedroom',
-            price: 1000, // Default price
-            discountPrice: null,
-            stock: 1,
-            isFeatured: false,
-            imagePaths: [imagePath],
-          });
-
-          if (result.ok) {
-            successCount++;
-          } else {
-            failedCount++;
-            console.error('Failed to create product:', productName, result.error);
-          }
-        } catch (error) {
-          failedCount++;
-          console.error('Error creating product:', error);
+        if (!uploadResult.ok) {
+          console.error('Batch upload failed:', uploadResult.error);
+          failedCount += batchFiles.length;
+          setProgress({ current: batchEnd, total: selectedFiles.length });
+          continue; // Skip this batch and continue with next
         }
 
-        setProgress({ current: i + 1, total: uploadResult.paths.length });
+        // Create a product for each uploaded image in this batch
+        for (let i = 0; i < uploadResult.paths.length; i++) {
+          const imagePath = uploadResult.paths[i];
+          const originalFile = batchFiles[i];
+          
+          // Generate product name from filename
+          const fileName = originalFile.name.replace(/\.[^/.]+$/, ''); // Remove extension
+          const productName = fileName
+            .replace(/[-_]/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase()); // Capitalize words
+          
+          const slug = fileName
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+
+          try {
+            const result = await createProductAction({
+              name: productName,
+              slug: `${slug}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`, // Add timestamp + random to ensure uniqueness
+              description: '',
+              category: 'Bedroom',
+              price: 1000, // Default price
+              discountPrice: null,
+              stock: 1,
+              isFeatured: false,
+              imagePaths: [imagePath],
+            });
+
+            if (result.ok) {
+              successCount++;
+            } else {
+              failedCount++;
+              console.error('Failed to create product:', productName, result.error);
+            }
+          } catch (error) {
+            failedCount++;
+            console.error('Error creating product:', error);
+          }
+
+          setProgress({ current: batchStart + i + 1, total: selectedFiles.length });
+        }
       }
 
       setCompleted(true);
