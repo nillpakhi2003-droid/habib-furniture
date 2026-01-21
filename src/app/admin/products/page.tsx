@@ -36,6 +36,7 @@ async function getProducts() {
     orderBy: {
       createdAt: "desc",
     },
+    take: 50, // Limit to 50 products per page for better performance
   });
 }
 
@@ -95,6 +96,9 @@ export default async function ProductsPage() {
                         <img
                           src={product.images[0].path}
                           alt={product.name}
+                          loading="lazy"
+                          width="80"
+                          height="80"
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -217,6 +221,9 @@ export default async function ProductsPage() {
                           <img
                             src={product.images[0].path}
                             alt={product.name}
+                            loading="lazy"
+                            width="64"
+                            height="64"
                             className="w-full h-full object-cover"
                           />
                         ) : (
