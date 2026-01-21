@@ -15,8 +15,8 @@ export default function NewProductPage() {
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length + images.length > 10) {
-      alert("Maximum 10 images allowed");
+    if (files.length + images.length > 20) {
+      alert("Maximum 20 images allowed");
       return;
     }
 

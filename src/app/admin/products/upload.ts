@@ -12,16 +12,15 @@ export async function uploadImage(formData: FormData): Promise<{ ok: true; path:
       return { ok: false, error: "No file provided" };
     }
 
-    // Validate file type
-    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
-    if (!validTypes.includes(file.type)) {
-      return { ok: false, error: "Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed." };
+    // Validate file type - allow all image formats
+    if (!file.type.startsWith("image/")) {
+      return { ok: false, error: "Invalid file type. Only image files are allowed." };
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      return { ok: false, error: "File too large. Maximum size is 5MB." };
+      return { ok: false, error: "File too large. Maximum size is 10MB." };
     }
 
     // Generate unique filename
@@ -61,22 +60,36 @@ export async function uploadMultipleImages(formData: FormData): Promise<{ ok: tr
       return { ok: false, error: "No files provided" };
     }
 
-    if (files.length > 10) {
-      return { ok: false, error: "Maximum 10 images allowed" };
+    if (files.length > 20) {
+      return { ok: false, error: "Maximum 20 images allowed at once" };
     }
 
     const paths: string[] = [];
+    const errors: string[] = [];
     
-    for (const file of files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       const fileFormData = new FormData();
       fileFormData.append("file", file);
       
       const result = await uploadImage(fileFormData);
       if (!result.ok) {
-        return { ok: false, error: result.error };
+        errors.push(`${file.name}: ${result.error}`);
+        continue; // Continue uploading other files
       }
       
       paths.push(result.path);
+    }
+    
+    // If some files failed but some succeeded, still return success with paths
+    if (paths.length > 0 && errors.length > 0) {
+      console.warn("Some files failed to upload:", errors);
+      return { ok: true, paths };
+    }
+    
+    // If all files failed
+    if (paths.length === 0) {
+      return { ok: false, error: errors.join("; ") || "All files failed to upload" };
     }
 
     return { ok: true, paths };

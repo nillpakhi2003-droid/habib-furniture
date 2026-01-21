@@ -90,28 +90,34 @@ export function EditProductForm({ product }: { product: Product }) {
 
     setUploading(true);
 
-    const uploadFormData = new FormData();
-    newImages.forEach((image) => {
-      uploadFormData.append("files", image);
-    });
+    try {
+      const uploadFormData = new FormData();
+      newImages.forEach((image) => {
+        uploadFormData.append("files", image);
+      });
 
-    const uploadResult = await uploadMultipleImages(uploadFormData);
-    if (!uploadResult.ok) {
-      alert(uploadResult.error);
+      const uploadResult = await uploadMultipleImages(uploadFormData);
+      if (!uploadResult.ok) {
+        alert(`Upload failed: ${uploadResult.error}`);
+        setUploading(false);
+        return;
+      }
+
+      const addResult = await addProductImagesAction(product.id, uploadResult.paths);
+      
+      if (addResult.ok) {
+        alert(`✅ Successfully uploaded ${uploadResult.paths.length} image(s)!`);
+        setNewImages([]);
+        previewUrls.forEach(url => URL.revokeObjectURL(url));
+        setPreviewUrls([]);
+        router.refresh();
+      } else {
+        alert(`Failed to save images: ${addResult.error || "Unknown error"}`);
+      }
+    } catch (error) {
+      alert(`Upload error: ${error}`);
+    } finally {
       setUploading(false);
-      return;
-    }
-
-    const addResult = await addProductImagesAction(product.id, uploadResult.paths);
-    setUploading(false);
-
-    if (addResult.ok) {
-      setNewImages([]);
-      previewUrls.forEach(url => URL.revokeObjectURL(url));
-      setPreviewUrls([]);
-      router.refresh();
-    } else {
-      alert(addResult.error || "Failed to add images");
     }
   };
 
@@ -184,7 +190,7 @@ export function EditProductForm({ product }: { product: Product }) {
             className="w-full border rounded-lg px-3 py-2 text-sm"
           />
           <p className="text-xs text-gray-500">
-            Supports: JPG, PNG, WEBP, GIF, SVG, AVIF and all image formats. Max 10MB per file.
+            Supports: JPG, PNG, WEBP, GIF, SVG, AVIF and all image formats. Max 10MB per file, up to 20 images at once.
           </p>
 
           {/* Preview New Images */}
