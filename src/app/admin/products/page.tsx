@@ -74,8 +74,8 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      {/* Mobile Card View - MUST show on phones */}
-      <div className="md:!hidden !block space-y-4">
+      {/* Mobile Card View */}
+      <div className="block lg:hidden space-y-4">
         {products.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm p-8 text-center text-gray-500">
             No products found. Add your first product to get started.
@@ -169,8 +169,8 @@ export default async function ProductsPage() {
         )}
       </div>
 
-      {/* Desktop Table View - MUST hide on phones */}
-      <div className="!hidden md:!block bg-white rounded-lg shadow-sm border overflow-hidden">
+      {/* Desktop Table View */}
+      <div className="hidden lg:block bg-white rounded-lg shadow-sm border overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
             <tr>
