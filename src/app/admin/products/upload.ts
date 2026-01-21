@@ -38,6 +38,14 @@ export async function uploadImage(formData: FormData): Promise<{ ok: true; path:
     // Convert file to buffer and save
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    if (buffer.length === 0) {
+      console.error("Upload error: received empty file buffer", {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+      });
+      return { ok: false, error: "Upload failed: empty file received" };
+    }
     const filepath = join(uploadsDir, filename);
     
     await writeFile(filepath, buffer);
