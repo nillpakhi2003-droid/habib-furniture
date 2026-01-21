@@ -67,9 +67,6 @@ export default async function ProductDetailPage({
                   src={product.images[0].path}
                   alt={product.name}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -88,9 +85,6 @@ export default async function ProductDetailPage({
                       src={image.path}
                       alt={product.name}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
                     />
                   </div>
                 ))}
