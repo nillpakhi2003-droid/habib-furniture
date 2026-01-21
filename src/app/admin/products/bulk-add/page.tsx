@@ -37,35 +37,29 @@ export default function BulkAddPage() {
     try {
       let successCount = 0;
       let failedCount = 0;
-      const batchSize = 5; // Upload 5 images at a time to avoid timeout
 
-      // Process files in batches
-      for (let batchStart = 0; batchStart < selectedFiles.length; batchStart += batchSize) {
-        const batchEnd = Math.min(batchStart + batchSize, selectedFiles.length);
-        const batchFiles = selectedFiles.slice(batchStart, batchEnd);
+      // Process one file at a time to avoid any timeout issues
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
 
-        // Upload batch of images
-        const formData = new FormData();
-        batchFiles.forEach(file => {
+        try {
+          // Upload single image
+          const formData = new FormData();
           formData.append('files', file);
-        });
 
-        const uploadResult = await uploadMultipleImages(formData);
-        
-        if (!uploadResult.ok) {
-          console.error('Batch upload failed:', uploadResult.error);
-          failedCount += batchFiles.length;
-          setProgress({ current: batchEnd, total: selectedFiles.length });
-          continue; // Skip this batch and continue with next
-        }
+          const uploadResult = await uploadMultipleImages(formData);
+          
+          if (!uploadResult.ok || uploadResult.paths.length === 0) {
+            console.error('Upload failed for:', file.name, uploadResult.error);
+            failedCount++;
+            setProgress({ current: i + 1, total: selectedFiles.length });
+            continue; // Skip to next file
+          }
 
-        // Create a product for each uploaded image in this batch
-        for (let i = 0; i < uploadResult.paths.length; i++) {
-          const imagePath = uploadResult.paths[i];
-          const originalFile = batchFiles[i];
+          const imagePath = uploadResult.paths[0];
           
           // Generate product name from filename
-          const fileName = originalFile.name.replace(/\.[^/.]+$/, ''); // Remove extension
+          const fileName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
           const productName = fileName
             .replace(/[-_]/g, ' ')
             .replace(/\b\w/g, l => l.toUpperCase()); // Capitalize words
@@ -75,32 +69,34 @@ export default function BulkAddPage() {
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-|-$/g, '');
 
-          try {
-            const result = await createProductAction({
-              name: productName,
-              slug: `${slug}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`, // Add timestamp + random to ensure uniqueness
-              description: '',
-              category: 'Bedroom',
-              price: 1000, // Default price
-              discountPrice: null,
-              stock: 1,
-              isFeatured: false,
-              imagePaths: [imagePath],
-            });
+          // Create product
+          const result = await createProductAction({
+            name: productName,
+            slug: `${slug}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+            description: '',
+            category: 'Bedroom',
+            price: 1000,
+            discountPrice: null,
+            stock: 1,
+            isFeatured: false,
+            imagePaths: [imagePath],
+          });
 
-            if (result.ok) {
-              successCount++;
-            } else {
-              failedCount++;
-              console.error('Failed to create product:', productName, result.error);
-            }
-          } catch (error) {
+          if (result.ok) {
+            successCount++;
+          } else {
             failedCount++;
-            console.error('Error creating product:', error);
+            console.error('Failed to create product:', productName, result.error);
           }
-
-          setProgress({ current: batchStart + i + 1, total: selectedFiles.length });
+        } catch (error) {
+          failedCount++;
+          console.error('Error processing file:', file.name, error);
         }
+
+        setProgress({ current: i + 1, total: selectedFiles.length });
+        
+        // Small delay to prevent overwhelming the server
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
 
       setCompleted(true);
