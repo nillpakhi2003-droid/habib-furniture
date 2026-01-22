@@ -8,49 +8,77 @@ import { ToggleProductButton } from "./ToggleProductButton";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const ITEMS_PER_PAGE = 20;
+
 function formatTaka(value: number | string) {
   const num = Number(value);
   if (!Number.isFinite(num)) return "৳0";
   return `৳${num.toLocaleString("en-BD")}`;
 }
 
-async function getProducts() {
-  return await prisma.product.findMany({
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      category: true,
-      description: true,
-      price: true,
-      discountPrice: true,
-      stock: true,
-      isActive: true,
-      isFeatured: true,
-      images: {
-        where: { isPrimary: true },
-        take: 1,
-        select: { path: true },
+async function getProducts(page: number, search: string) {
+  const skip = (page - 1) * ITEMS_PER_PAGE;
+  
+  const where = search
+    ? {
+        OR: [
+          { name: { contains: search, mode: "insensitive" as const } },
+          { slug: { contains: search, mode: "insensitive" as const } },
+          { category: { contains: search, mode: "insensitive" as const } },
+        ],
+      }
+    : {};
+
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        category: true,
+        description: true,
+        price: true,
+        discountPrice: true,
+        stock: true,
+        isActive: true,
+        isFeatured: true,
+        images: {
+          where: { isPrimary: true },
+          take: 1,
+          select: { path: true },
+        },
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip,
+      take: ITEMS_PER_PAGE,
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  return { products, total, totalPages: Math.ceil(total / ITEMS_PER_PAGE) };
 }
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: { page?: string; search?: string };
+}) {
   // Authentication check
   const session = await getAdminSession();
   if (!session) {
     redirect("/admin/login");
   }
 
-  const products = await getProducts();
+  const currentPage = Number(searchParams.page) || 1;
+  const searchQuery = searchParams.search || "";
+  const { products, total, totalPages } = await getProducts(currentPage, searchQuery);
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <h1 className="text-3xl font-bold">Products</h1>
         <div className="flex gap-3">
           <Link
@@ -72,6 +100,40 @@ export default async function ProductsPage() {
             + Add
           </Link>
         </div>
+      </div>
+
+      {/* Search Bar */}
+      <form method="get" className="mb-6">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            name="search"
+            defaultValue={searchQuery}
+            placeholder="Search products by name, slug, or category..."
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+          >
+            Search
+          </button>
+          {searchQuery && (
+            <Link
+              href="/admin/products"
+              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
+            >
+              Clear
+            </Link>
+          )}
+        </div>
+      </form>
+
+      {/* Results Info */}
+      <div className="mb-4 text-sm text-gray-600">
+        Showing {products.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1} -{" "}
+        {Math.min(currentPage * ITEMS_PER_PAGE, total)} of {total} products
+        {searchQuery && ` for "${searchQuery}"`}
       </div>
 
       {/* Mobile Card View */}
@@ -295,6 +357,63 @@ export default async function ProductsPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <Link
+            href={`/admin/products?page=${currentPage - 1}${searchQuery ? `&search=${searchQuery}` : ""}`}
+            className={`px-4 py-2 border rounded-lg font-semibold ${
+              currentPage === 1
+                ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                : "border-gray-300 text-gray-700 hover:bg-gray-50"
+            }`}
+            aria-disabled={currentPage === 1}
+          >
+            Previous
+          </Link>
+          
+          <div className="flex gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+              // Show first page, last page, current page, and pages around current
+              if (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 2 && page <= currentPage + 2)
+              ) {
+                return (
+                  <Link
+                    key={page}
+                    href={`/admin/products?page=${page}${searchQuery ? `&search=${searchQuery}` : ""}`}
+                    className={`px-4 py-2 border rounded-lg font-semibold ${
+                      currentPage === page
+                        ? "bg-blue-600 text-white border-blue-600"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    {page}
+                  </Link>
+                );
+              } else if (page === currentPage - 3 || page === currentPage + 3) {
+                return <span key={page} className="px-2 py-2">...</span>;
+              }
+              return null;
+            })}
+          </div>
+
+          <Link
+            href={`/admin/products?page=${currentPage + 1}${searchQuery ? `&search=${searchQuery}` : ""}`}
+            className={`px-4 py-2 border rounded-lg font-semibold ${
+              currentPage === totalPages
+                ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                : "border-gray-300 text-gray-700 hover:bg-gray-50"
+            }`}
+            aria-disabled={currentPage === totalPages}
+          >
+            Next
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
