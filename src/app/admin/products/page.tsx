@@ -36,7 +36,6 @@ async function getProducts() {
     orderBy: {
       createdAt: "desc",
     },
-    take: 50, // Limit to 50 products per page for better performance
   });
 }
 
