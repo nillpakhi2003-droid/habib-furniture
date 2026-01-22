@@ -17,7 +17,9 @@ function formatTaka(value: number | string) {
 }
 
 async function getProducts(page: number, search: string) {
-  const skip = (page - 1) * ITEMS_PER_PAGE;
+  // Validate page number
+  const validPage = Math.max(1, page);
+  const skip = (validPage - 1) * ITEMS_PER_PAGE;
   
   const where = search
     ? {
@@ -29,6 +31,7 @@ async function getProducts(page: number, search: string) {
       }
     : {};
 
+  // Run queries in parallel for better performance
   const [products, total] = await Promise.all([
     prisma.product.findMany({
       where,
@@ -37,12 +40,10 @@ async function getProducts(page: number, search: string) {
         name: true,
         slug: true,
         category: true,
-        description: true,
         price: true,
         discountPrice: true,
         stock: true,
         isActive: true,
-        isFeatured: true,
         images: {
           where: { isPrimary: true },
           take: 1,
@@ -58,7 +59,16 @@ async function getProducts(page: number, search: string) {
     prisma.product.count({ where }),
   ]);
 
-  return { products, total, totalPages: Math.ceil(total / ITEMS_PER_PAGE) };
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+  
+  return { 
+    products, 
+    total, 
+    totalPages,
+    currentPage: validPage,
+    hasNextPage: validPage < totalPages,
+    hasPrevPage: validPage > 1,
+  };
 }
 
 export default async function ProductsPage({
@@ -74,7 +84,7 @@ export default async function ProductsPage({
 
   const currentPage = Number(searchParams.page) || 1;
   const searchQuery = searchParams.search || "";
-  const { products, total, totalPages } = await getProducts(currentPage, searchQuery);
+  const { products, total, totalPages, hasNextPage, hasPrevPage } = await getProducts(currentPage, searchQuery);
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
@@ -360,58 +370,64 @@ export default async function ProductsPage({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-6 flex items-center justify-center gap-2">
-          <Link
-            href={`/admin/products?page=${currentPage - 1}${searchQuery ? `&search=${searchQuery}` : ""}`}
-            className={`px-4 py-2 border rounded-lg font-semibold ${
-              currentPage === 1
-                ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                : "border-gray-300 text-gray-700 hover:bg-gray-50"
-            }`}
-            aria-disabled={currentPage === 1}
-          >
-            Previous
-          </Link>
-          
-          <div className="flex gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-              // Show first page, last page, current page, and pages around current
-              if (
-                page === 1 ||
-                page === totalPages ||
-                (page >= currentPage - 2 && page <= currentPage + 2)
-              ) {
-                return (
-                  <Link
-                    key={page}
-                    href={`/admin/products?page=${page}${searchQuery ? `&search=${searchQuery}` : ""}`}
-                    className={`px-4 py-2 border rounded-lg font-semibold ${
-                      currentPage === page
-                        ? "bg-blue-600 text-white border-blue-600"
-                        : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                    }`}
-                  >
-                    {page}
-                  </Link>
-                );
-              } else if (page === currentPage - 3 || page === currentPage + 3) {
-                return <span key={page} className="px-2 py-2">...</span>;
-              }
-              return null;
-            })}
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Page Info */}
+          <div className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
           </div>
 
-          <Link
-            href={`/admin/products?page=${currentPage + 1}${searchQuery ? `&search=${searchQuery}` : ""}`}
-            className={`px-4 py-2 border rounded-lg font-semibold ${
-              currentPage === totalPages
-                ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                : "border-gray-300 text-gray-700 hover:bg-gray-50"
-            }`}
-            aria-disabled={currentPage === totalPages}
-          >
-            Next
-          </Link>
+          {/* Pagination Controls */}
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/admin/products?page=${currentPage - 1}${searchQuery ? `&search=${searchQuery}` : ""}`}
+              className={`px-4 py-2 border rounded-lg font-semibold transition ${
+                !hasPrevPage
+                  ? "border-gray-200 text-gray-400 cursor-not-allowed pointer-events-none"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              Previous
+            </Link>
+            
+            <div className="hidden sm:flex gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                // Show first page, last page, current page, and pages around current
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 2 && page <= currentPage + 2)
+                ) {
+                  return (
+                    <Link
+                      key={page}
+                      href={`/admin/products?page=${page}${searchQuery ? `&search=${searchQuery}` : ""}`}
+                      className={`px-4 py-2 border rounded-lg font-semibold transition ${
+                        currentPage === page
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                      }`}
+                    >
+                      {page}
+                    </Link>
+                  );
+                } else if (page === currentPage - 3 || page === currentPage + 3) {
+                  return <span key={page} className="px-2 py-2 text-gray-500">...</span>;
+                }
+                return null;
+              })}
+            </div>
+
+            <Link
+              href={`/admin/products?page=${currentPage + 1}${searchQuery ? `&search=${searchQuery}` : ""}`}
+              className={`px-4 py-2 border rounded-lg font-semibold transition ${
+                !hasNextPage
+                  ? "border-gray-200 text-gray-400 cursor-not-allowed pointer-events-none"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              Next
+            </Link>
+          </div>
         </div>
       )}
     </div>
