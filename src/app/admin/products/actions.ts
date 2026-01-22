@@ -286,3 +286,24 @@ export async function setPrimaryImageAction(
     return { ok: false, error: "Failed to set primary image" };
   }
 }
+
+export async function deleteProductAction(
+  productId: string,
+): Promise<Result> {
+  try {
+    // Delete all images associated with the product first
+    await prisma.image.deleteMany({
+      where: { productId },
+    });
+
+    // Delete the product
+    await prisma.product.delete({
+      where: { id: productId },
+    });
+
+    return { ok: true };
+  } catch (err) {
+    console.error("Delete product error:", err);
+    return { ok: false, error: "Failed to delete product" };
+  }
+}

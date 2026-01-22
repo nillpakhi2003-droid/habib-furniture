@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
 import { getAdminSession } from "../../../lib/auth/session";
 import { ToggleProductButton } from "./ToggleProductButton";
+import { DeleteProductButton } from "./DeleteProductButton";
 
 // Always render fresh data (no static cache) so new images show immediately
 export const dynamic = "force-dynamic";
@@ -237,6 +238,12 @@ export default async function ProductsPage({
                       isActive={product.isActive}
                     />
                   </div>
+                  <div className="flex-1">
+                    <DeleteProductButton
+                      productId={product.id}
+                      productName={product.name}
+                    />
+                  </div>
                 </div>
               </div>
             );
@@ -357,6 +364,10 @@ export default async function ProductsPage({
                         <ToggleProductButton
                           productId={product.id}
                           isActive={product.isActive}
+                        />
+                        <DeleteProductButton
+                          productId={product.id}
+                          productName={product.name}
                         />
                       </div>
                     </td>
