@@ -95,10 +95,21 @@ export default async function ProductsPage({
               <nav className="space-y-1">
                 {CATEGORIES.map((cat) => {
                   const isActive = category === cat.slug;
+                  let href = "/products";
+                  
+                  if (cat.slug !== "all") {
+                    const params = new URLSearchParams();
+                    params.set("category", cat.slug);
+                    if (priceRange) params.set("price", priceRange);
+                    href = `/products?${params.toString()}`;
+                  } else if (priceRange) {
+                    href = `/products?price=${priceRange}`;
+                  }
+                  
                   return (
                     <Link
                       key={cat.slug}
-                      href={cat.slug === "all" ? "/products" : `/products?category=${cat.slug}`}
+                      href={href}
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                         isActive
                           ? "bg-red-50 text-red-600 font-semibold"
@@ -123,10 +134,14 @@ export default async function ProductsPage({
                 <div className="space-y-2 text-sm">
                   {PRICE_RANGES.map((range) => {
                     const isActive = priceRange === range.value;
+                    const categoryParam = category !== "all" ? `category=${category}` : "";
+                    const priceParam = `price=${range.value}`;
+                    const urlParams = categoryParam ? `${categoryParam}&${priceParam}` : priceParam;
+                    
                     return (
                       <Link
                         key={range.value}
-                        href={`/products${category !== "all" ? `?category=${category}&` : "?"}price=${range.value}`}
+                        href={`/products?${urlParams}`}
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${
                           isActive
                             ? "bg-red-50 text-red-600 font-medium"
@@ -148,7 +163,7 @@ export default async function ProductsPage({
                   })}
                   {priceRange && (
                     <Link
-                      href={`/products${category !== "all" ? `?category=${category}` : ""}`}
+                      href={category !== "all" ? `/products?category=${category}` : "/products"}
                       className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition font-medium"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
